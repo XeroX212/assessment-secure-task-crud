@@ -1,4 +1,27 @@
-<div class="p-6">
-  <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
-  <p>Welcome to the Secure Task Manager</p>
+<div class="min-h-screen bg-gray-50">
+  <!-- Navbar -->
+  <nav class="bg-blue-600 text-white p-4 flex justify-between items-center shadow-md">
+    <h1 class="text-xl font-bold">Secure Task Manager</h1>
+    <button
+      (click)="logout()"
+      class="bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition"
+    >
+      Logout
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="p-6">
+    <h2 class="text-2xl font-semibold mb-6">Welcome to your dashboard</h2>
+
+    <div class="bg-white shadow rounded-xl p-6">
+      <p class="text-gray-600">This is where your tasks will appear.</p>
+      <a
+        routerLink="/tasks"
+        class="inline-block mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+      >
+        Go to Tasks
+      </a>
+    </div>
+  </div>
 </div>

@@ -4,10 +4,12 @@ import { AuthService } from '../../services/auth/auth';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-register',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './register.html',
-  imports: [CommonModule, FormsModule], 
   styleUrls: ['./register.css'],
 })
 export class RegisterComponent {
@@ -18,7 +20,8 @@ export class RegisterComponent {
   password = '';
   message: string | null = null;
 
-  onSubmit() {
+  onRegister() {
+    this.message = null;
     this.auth.register(this.email, this.password).subscribe({
       next: () => {
         this.message = 'Registration successful! Please login.';
