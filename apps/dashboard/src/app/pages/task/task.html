@@ -1,0 +1,41 @@
+<div class="max-w-2xl mx-auto mt-10 bg-white shadow-md rounded-lg p-6">
+  <h2 class="text-xl font-bold mb-4">My Tasks</h2>
+
+  <!-- Add task form -->
+  <div class="flex gap-2 mb-6">
+    <input
+      type="text"
+      [(ngModel)]="newTitle"
+      placeholder="Task title"
+      class="flex-1 border px-3 py-2 rounded-md"
+    />
+    <input
+      type="text"
+      [(ngModel)]="newDescription"
+      placeholder="Description"
+      class="flex-1 border px-3 py-2 rounded-md"
+    />
+    <button
+      (click)="addTask()"
+      class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+    >
+      Add
+    </button>
+  </div>
+
+  <!-- Task list -->
+  <ul class="space-y-3">
+    <li *ngFor="let task of tasks" class="flex justify-between items-center border-b pb-2">
+      <div>
+        <p class="font-semibold">{{ task.title }}</p>
+        <p class="text-sm text-gray-600">{{ task.description }}</p>
+      </div>
+      <button
+        (click)="deleteTask(task.id)"
+        class="text-red-500 hover:text-red-700"
+      >
+        Delete
+      </button>
+    </li>
+  </ul>
+</div>
