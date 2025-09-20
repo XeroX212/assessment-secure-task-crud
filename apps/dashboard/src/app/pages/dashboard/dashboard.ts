@@ -63,13 +63,13 @@ export class DashboardComponent implements OnInit {
   updateTask() {
     if (!this.editingTask || this.editingTask.id == null) return;
 
-this.taskService.updateTask(this.editingTask.id!, {
-  title: this.editingTask.title,
-  description: this.editingTask.description,
-}).subscribe(() => {
-  this.loadTasks();
-  this.editingTask = null;
-});
+    this.taskService.updateTask(this.editingTask.id!, {
+      title: this.editingTask.title,
+      description: this.editingTask.description,
+    }).subscribe(() => {
+      this.loadTasks();
+      this.editingTask = null;
+    });
 
 
   }
