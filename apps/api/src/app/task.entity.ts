@@ -10,11 +10,11 @@ export class Task {
   title: string;
 
   @Column({ nullable: true })
-  description: string;
+  description?: string;
 
-  @Column({ default: 'pending' })
-  status: 'pending' | 'in-progress' | 'done';
+  @ManyToOne(() => User, (user) => user.createdTasks, { eager: true })
+  createdBy: User;
 
-  @ManyToOne(() => User, (user) => user.id, { eager: true })
-  owner: User;
+  @ManyToOne(() => User, (user) => user.assignedTasks, { eager: true, nullable: true })
+  assignee?: User;
 }

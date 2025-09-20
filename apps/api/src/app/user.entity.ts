@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Task } from './task.entity';
 
 @Entity()
 export class User {
@@ -13,4 +14,10 @@ export class User {
 
   @Column({ default: 'Viewer' })
   role: 'Owner' | 'Admin' | 'Viewer';
+
+  @OneToMany(() => Task, (task) => task.createdBy)
+  createdTasks: Task[];
+
+  @OneToMany(() => Task, (task) => task.assignee)
+  assignedTasks: Task[];
 }

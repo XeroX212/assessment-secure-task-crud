@@ -1,7 +1,20 @@
-import { Controller, Post, Get, Body, Param, Delete, Put, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  ParseIntPipe,
+  Req,
+} from '@nestjs/common';
+import { Request } from 'express';
 import { TaskService } from './task.service';
 import { JwtAuthGuard } from '../jwt-auth.guard';
-import { Task } from '../task.entity';
+import { CreateTaskDto } from './create-task.dto';
+import { UpdateTaskDto } from './update-task.dto';
 import { User } from '../user.entity';
 
 @Controller('tasks')
@@ -9,23 +22,33 @@ import { User } from '../user.entity';
 export class TaskController {
   constructor(private taskService: TaskService) {}
 
-    @Post()
-    create(@Body() body: { title: string; description?: string }, @Request() req) {
-    return this.taskService.create(body.title, body.description, { id: req.user.userId } as User);
-    }
-
   @Get()
-  findAll(@Request() req) {
-    return this.taskService.findAll(req.user.userId);
+  findAll(@Req() req: AuthenticatedRequest) {
+    console.log('🐛 req.user from JWT:', req.user);
+    return this.taskService.findAllForUser(req.user);
+  }
+
+  @Post()
+  create(@Body() body: CreateTaskDto, @Req() req: AuthenticatedRequest) {
+    console.log('📌 req.user:', req.user);
+    return this.taskService.create(body, req.user);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() body: Partial<Task>) {
-    return this.taskService.update(id, body);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateTaskDto,
+    @Req() req: AuthenticatedRequest
+  ) {
+    return this.taskService.update(id, dto, req.user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.taskService.delete(id);
+  delete(@Param('id', ParseIntPipe) id: number, @Req() req: AuthenticatedRequest) {
+    return this.taskService.delete(id, req.user);
   }
+}
+
+export interface AuthenticatedRequest extends Request {
+  user: User;
 }

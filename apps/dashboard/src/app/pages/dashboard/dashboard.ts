@@ -39,9 +39,20 @@ export class DashboardComponent implements OnInit {
 
   addTask() {
     if (!this.newTask.title) return;
-    this.taskService.createTask(this.newTask).subscribe(() => {
-      this.newTask = { title: '', description: '' };
-      this.loadTasks();
+
+    const task: Task = {
+      title: this.newTask.title,
+      description: this.newTask.description ?? '',
+    };
+
+    console.log('🚀 Sending payload to API:', task);
+
+    this.taskService.createTask(task).subscribe({
+      next: () => {
+        this.newTask = { title: '', description: '' };
+        this.loadTasks();
+      },
+      error: (err) => console.error('❌ API error:', err),
     });
   }
 
@@ -52,10 +63,15 @@ export class DashboardComponent implements OnInit {
   updateTask() {
     if (!this.editingTask || this.editingTask.id == null) return;
 
-    this.taskService.updateTask(this.editingTask.id, this.editingTask).subscribe(() => {
-      this.loadTasks();
-      this.editingTask = null;
-    });
+this.taskService.updateTask(this.editingTask.id!, {
+  title: this.editingTask.title,
+  description: this.editingTask.description,
+}).subscribe(() => {
+  this.loadTasks();
+  this.editingTask = null;
+});
+
+
   }
 
   cancelEdit() {

@@ -28,7 +28,10 @@
         </div>
 
         <!-- Add Task (Admins/Owners only) -->
-        <div *ngIf="userRole !== 'Viewer'" class="w-full max-w-3xl bg-white p-4 rounded-lg shadow mb-6">
+        <div
+          *ngIf="userRole !== 'Viewer'"
+          class="w-full max-w-3xl bg-white p-4 rounded-lg shadow mb-6"
+        >
           <h2 class="text-lg font-semibold mb-4">Add New Task</h2>
           <form (ngSubmit)="addTask()" class="flex flex-col gap-3">
             <input
@@ -68,15 +71,15 @@
             <!-- Actions (Admins/Owners only) -->
             <div *ngIf="userRole !== 'Viewer'" class="mt-3 md:mt-0 flex gap-2">
               <!-- Edit Mode -->
-              <ng-container *ngIf="editingTask as editTask; else viewMode">
+              <ng-container *ngIf="editingTask && editingTask.id === task.id; else viewMode">
                 <input
-                  [(ngModel)]="editTask.title"
+                  [(ngModel)]="editingTask.title"
                   name="editTitle"
                   placeholder="Edit Title"
                   class="p-2 border rounded"
                 />
                 <input
-                  [(ngModel)]="editTask.description"
+                  [(ngModel)]="editingTask.description"
                   name="editDesc"
                   placeholder="Edit Description"
                   class="p-2 border rounded"
