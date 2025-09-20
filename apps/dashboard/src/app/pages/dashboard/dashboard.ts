@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TaskService } from '../../services/task/task';
 import { Task } from '../../models/task';
+import { decodeToken } from '../../utils/jwt.utils';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -19,8 +21,16 @@ export class DashboardComponent implements OnInit {
   tasks: Task[] = [];
   newTask: Task = { title: '', description: '' };
 
+  // declare userRole
+  userRole = 'Viewer'; // default
+
+  // allow editingTask to be null
+  editingTask: Task | null = null;
+
+
   ngOnInit() {
     this.loadTasks();
+    this.setUserRoleFromToken();
   }
 
   loadTasks() {
@@ -35,14 +45,39 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  editTask(task: Task) {
+    this.editingTask = { ...task };
+  }
+
+  updateTask() {
+    if (!this.editingTask || this.editingTask.id == null) return;
+
+    this.taskService.updateTask(this.editingTask.id, this.editingTask).subscribe(() => {
+      this.loadTasks();
+      this.editingTask = null;
+    });
+  }
+
+  cancelEdit() {
+    this.editingTask = null;
+  }
+
   deleteTask(id: number) {
     this.taskService.deleteTask(id).subscribe(() => this.loadTasks());
   }
 
   logout() {
-    // Clear token from storage
     localStorage.removeItem('token');
-    // Navigate back to login
     this.router.navigate(['/login']);
+  }
+
+  private setUserRoleFromToken() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const decoded = decodeToken(token);
+    if (decoded?.role) {
+      this.userRole = decoded.role;
+    }
   }
 }

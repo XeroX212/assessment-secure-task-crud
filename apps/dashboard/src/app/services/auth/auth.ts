@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
+import { decodeToken } from '../../utils/jwt.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,24 @@ import { tap } from 'rxjs/operators';
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api/auth';
   private http = inject(HttpClient); // ✅ instead of constructor
+  private readonly tokenKey = 'token';
+
+  setToken(token: string) {
+    localStorage.setItem(this.tokenKey, token);
+
+    const decoded = decodeToken(token);
+    if (decoded) {
+      localStorage.setItem('role', decoded.role);
+    }
+  }
+
+  getRole(): 'Owner' | 'Admin' | 'Viewer' | null {
+    const token = localStorage.getItem(this.tokenKey);
+    if (!token) return null;
+
+    const decoded = decodeToken(token);
+    return decoded?.role ?? null;
+  }
 
   register(email: string, password: string) {
     return this.http.post(`${this.apiUrl}/register`, { email, password });

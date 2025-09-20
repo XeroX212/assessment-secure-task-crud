@@ -12,9 +12,9 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(email: string, password: string) {
+  async register(email: string, password: string, role: 'Owner' | 'Admin' | 'Viewer' = 'Viewer') {
     const hash = await bcrypt.hash(password, 10);
-    const user = this.repo.create({ email, password: hash });
+    const user = this.repo.create({ email, password: hash, role });
     return this.repo.save(user);
   }
 
