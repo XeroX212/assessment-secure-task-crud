@@ -31,7 +31,7 @@
         <p class="text-sm text-gray-600">{{ task.description }}</p>
       </div>
       <button
-        (click)="deleteTask(task.id)"
+        (click)="deleteTask(task.id!)"
         class="text-red-500 hover:text-red-700"
       >
         Delete

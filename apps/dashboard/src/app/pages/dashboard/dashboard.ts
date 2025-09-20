@@ -1,21 +1,48 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth/auth';
+import { TaskService } from '../../services/task/task';
+import { Task } from '../../models/task';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dashboard.html',
-  styleUrls: ['./dashboard.css'],
+  styleUrl: './dashboard.css',
 })
-export class DashboardComponent {
-  private auth = inject(AuthService);
+export class DashboardComponent implements OnInit {
+  private taskService = inject(TaskService);
   private router = inject(Router);
 
+  tasks: Task[] = [];
+  newTask: Task = { title: '', description: '' };
+
+  ngOnInit() {
+    this.loadTasks();
+  }
+
+  loadTasks() {
+    this.taskService.getTasks().subscribe((tasks) => (this.tasks = tasks));
+  }
+
+  addTask() {
+    if (!this.newTask.title) return;
+    this.taskService.createTask(this.newTask).subscribe(() => {
+      this.newTask = { title: '', description: '' };
+      this.loadTasks();
+    });
+  }
+
+  deleteTask(id: number) {
+    this.taskService.deleteTask(id).subscribe(() => this.loadTasks());
+  }
+
   logout() {
-    this.auth.logout();
+    // Clear token from storage
+    localStorage.removeItem('token');
+    // Navigate back to login
     this.router.navigate(['/login']);
   }
 }

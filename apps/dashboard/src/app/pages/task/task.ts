@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TaskService, Task } from '../../task/task';
+import { TaskService } from '../../services/task/task';
+import { Task } from '../../models/task';
 
 @Component({
   selector: 'app-tasks',
@@ -23,8 +24,14 @@ export class TasksComponent implements OnInit {
 
   addTask() {
     if (!this.newTitle) return;
-    this.taskService.createTask(this.newTitle, this.newDescription).subscribe((task) => {
-      this.tasks.push(task);
+
+    const task: Task = {
+      title: this.newTitle,
+      description: this.newDescription,
+    };
+
+    this.taskService.createTask(task).subscribe((createdTask) => {
+      this.tasks.push(createdTask);
       this.newTitle = '';
       this.newDescription = '';
     });
