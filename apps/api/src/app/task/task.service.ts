@@ -13,10 +13,17 @@ export class TaskService {
   ) {}
 
   private canMutateTask(user: any, task: Task) {
-  if (user.role === 'Admin') return true;
-  if (user.role === 'Owner' && task.createdBy.id === user.userId) return true;
-  return false;
+    console.log('👤 Current user:', user);
+    console.log('📌 Task createdBy:', task.createdBy);
+
+    if (user.role === 'Admin') return true;
+    if (user.role === 'Owner' && task.createdBy.id === user.id) {
+      return true;
+    }
+    return false;
   }
+
+
 
   async findAllForUser(user: User) {
     console.log(' Filtering tasks for user:', user);
